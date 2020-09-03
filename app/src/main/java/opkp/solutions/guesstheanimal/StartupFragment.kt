@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.view.animation.AnimationUtils
+import androidx.databinding.DataBindingUtil
+import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
 
 
 /**
@@ -28,7 +30,17 @@ class StartupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_startup, container, false)
+        val binding =  DataBindingUtil.inflate<FragmentStartupBinding>(inflater, R.layout.fragment_startup, container,false)
+
+
+
+        val startanim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
+
+        val logo = binding.aninmalsLogo
+
+        logo.startAnimation(startanim)
+
+        return binding.root
     }
 
 //    companion object {
