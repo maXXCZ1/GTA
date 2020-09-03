@@ -9,5 +9,15 @@
         android:id="@+id/startupFragment"
         android:name="opkp.solutions.guesstheanimal.StartupFragment"
         android:label="fragment_startup"
-        tools:layout="@layout/fragment_startup" />
+        tools:layout="@layout/fragment_startup" >
+        <action
+            android:id="@+id/action_startupFragment_to_gameFragment"
+            app:destination="@id/gameFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="opkp.solutions.guesstheanimal.game.GameFragment"
+        android:label="GameFragment" />
 </navigation>

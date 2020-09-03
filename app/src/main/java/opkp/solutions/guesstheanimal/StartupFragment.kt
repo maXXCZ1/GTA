@@ -1,12 +1,19 @@
 package opkp.solutions.guesstheanimal
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorDestinationBuilder
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
 
 
@@ -32,34 +39,22 @@ class StartupFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding =  DataBindingUtil.inflate<FragmentStartupBinding>(inflater, R.layout.fragment_startup, container,false)
 
-
-
         val startanim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
 
-        val logo = binding.aninmalsLogo
+        val logo = binding.animalsLogo
 
         logo.startAnimation(startanim)
-
+//        animationFinished(startanim)
+        if (startanim.hasEnded()) {
+            findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
+        }
         return binding.root
     }
 
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment StartupFragment.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            StartupFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
+//    private fun animationFinished(animation: Animation) {
+//        Log.d("StartupFragment", "animationFinished started")
+//
+//        Log.d("StartupFragment", "animationFinished ended")
 //    }
+
 }

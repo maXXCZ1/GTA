@@ -9,7 +9,7 @@
         android:background="@color/colorStartupBackground">
 
         <ImageView
-            android:id="@+id/aninmals_logo"
+            android:id="@+id/animals_logo"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:contentDescription="@string/logo_with_animals"
