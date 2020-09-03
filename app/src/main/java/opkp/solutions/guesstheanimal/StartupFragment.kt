@@ -9,12 +9,10 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.NavController
-import androidx.navigation.fragment.FragmentNavigator
-import androidx.navigation.fragment.FragmentNavigatorDestinationBuilder
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
+
+
 
 
 /**
@@ -23,6 +21,8 @@ import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
  * create an instance of this fragment.
  */
 class StartupFragment : Fragment() {
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,24 +37,37 @@ class StartupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding =  DataBindingUtil.inflate<FragmentStartupBinding>(inflater, R.layout.fragment_startup, container,false)
-
-        val startanim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
-
+        val binding = DataBindingUtil.inflate<FragmentStartupBinding>(
+            inflater,
+            R.layout.fragment_startup,
+            container,
+            false
+        )
+        val anim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
         val logo = binding.animalsLogo
 
-        logo.startAnimation(startanim)
-//        animationFinished(startanim)
-        if (startanim.hasEnded()) {
-            findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
-        }
+        logo.startAnimation(anim)
+
+        anim.setAnimationListener(object: Animation.AnimationListener{
+            override fun onAnimationStart(p0: Animation?) {
+//                Log.d("StartupFragment", "onAnimationStart started")
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                Log.d("StartupFragment", "onAnimationEnd started")
+                findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
+                Log.d("StartupFragment", "onAnimationEnd ended")
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+//                Log.d("StartupFragment", "onAnimationRepeat started")
+            }
+        })
+//
+//        logo.setOnClickListener(){
+//            findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
+//        }
+
         return binding.root
     }
-
-//    private fun animationFinished(animation: Animation) {
-//        Log.d("StartupFragment", "animationFinished started")
-//
-//        Log.d("StartupFragment", "animationFinished ended")
-//    }
-
 }
