@@ -1,7 +1,10 @@
 package opkp.solutions.guesstheanimal
 
 
+import android.media.MediaPlayer
+import android.media.SoundPool
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,12 +25,7 @@ import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
 
 class StartupFragment : Fragment(){
 
-    private var shouldAnimate = true
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    var shouldAnimate = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,21 +38,20 @@ class StartupFragment : Fragment(){
             container,
             false
         )
-
+        var player = MediaPlayer.create(context, R.raw.dogbark)
         val anim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
         val logo = binding.animalsLogo
 
         if (shouldAnimate) {
+            player.start()
             logo.startAnimation(anim)
         }
-
 
         anim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
             }
 
             override fun onAnimationEnd(p0: Animation?) {
-                Log.d("StartupFragment", "onAnimationEnd started")
                 shouldAnimate = false
                 findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
             }
@@ -68,5 +65,6 @@ class StartupFragment : Fragment(){
         }
         return binding.root
     }
+
 
 }
