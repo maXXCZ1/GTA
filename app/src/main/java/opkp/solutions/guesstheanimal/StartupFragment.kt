@@ -10,26 +10,25 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
-
-
-
 
 /**
  * A simple [Fragment] subclass.
  * Use the [StartupFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class StartupFragment : Fragment() {
 
 
+class StartupFragment : Fragment(){
 
-
+    var shouldAnimate: Boolean = true
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
 
-        }
+        shouldAnimate = true
+
     }
 
     override fun onCreateView(
@@ -43,10 +42,14 @@ class StartupFragment : Fragment() {
             container,
             false
         )
+
         val anim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
         val logo = binding.animalsLogo
 
-        logo.startAnimation(anim)
+        if (shouldAnimate) {
+            logo.startAnimation(anim)
+        }
+        shouldAnimate = false
 
         anim.setAnimationListener(object: Animation.AnimationListener{
             override fun onAnimationStart(p0: Animation?) {
@@ -56,18 +59,17 @@ class StartupFragment : Fragment() {
             override fun onAnimationEnd(p0: Animation?) {
                 Log.d("StartupFragment", "onAnimationEnd started")
                 findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
-                Log.d("StartupFragment", "onAnimationEnd ended")
             }
 
             override fun onAnimationRepeat(p0: Animation?) {
 //                Log.d("StartupFragment", "onAnimationRepeat started")
             }
         })
-//
-//        logo.setOnClickListener(){
-//            findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
-//        }
 
+        binding.animalsLogo.setOnClickListener{
+            (findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment()))
+        }
         return binding.root
     }
+
 }

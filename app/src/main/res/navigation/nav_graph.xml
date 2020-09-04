@@ -14,10 +14,20 @@
             android:id="@+id/action_startupFragment_to_gameFragment"
             app:destination="@id/gameFragment"
             app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
         android:name="opkp.solutions.guesstheanimal.game.GameFragment"
-        android:label="GameFragment" />
+        android:label="GameFragment" >
+        <action
+            android:id="@+id/action_gameFragment_to_startupFragment"
+            app:destination="@id/startupFragment" />
+        <argument
+            android:name="returnBack"
+            app:argType="boolean"
+            android:defaultValue="true" />
+    </fragment>
 </navigation>
