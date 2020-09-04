@@ -1,16 +1,16 @@
 package opkp.solutions.guesstheanimal
 
+
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
 
 /**
@@ -22,12 +22,10 @@ import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
 
 class StartupFragment : Fragment(){
 
-    var shouldAnimate: Boolean = true
-    
+    private var shouldAnimate = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        shouldAnimate = true
 
     }
 
@@ -49,20 +47,19 @@ class StartupFragment : Fragment(){
         if (shouldAnimate) {
             logo.startAnimation(anim)
         }
-        shouldAnimate = false
 
-        anim.setAnimationListener(object: Animation.AnimationListener{
+
+        anim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
-//                Log.d("StartupFragment", "onAnimationStart started")
             }
 
             override fun onAnimationEnd(p0: Animation?) {
                 Log.d("StartupFragment", "onAnimationEnd started")
+                shouldAnimate = false
                 findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
             }
 
             override fun onAnimationRepeat(p0: Animation?) {
-//                Log.d("StartupFragment", "onAnimationRepeat started")
             }
         })
 
