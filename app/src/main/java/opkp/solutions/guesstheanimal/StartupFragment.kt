@@ -2,10 +2,7 @@ package opkp.solutions.guesstheanimal
 
 
 import android.media.MediaPlayer
-import android.media.SoundPool
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
+import opkp.solutions.guesstheanimal.dataclass.Animal
 
 /**
  * A simple [Fragment] subclass.
@@ -38,6 +36,7 @@ class StartupFragment : Fragment(){
             container,
             false
         )
+
         var player = MediaPlayer.create(context, R.raw.dogbark)
         val anim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
         val logo = binding.animalsLogo
@@ -65,6 +64,5 @@ class StartupFragment : Fragment(){
         }
         return binding.root
     }
-
 
 }
