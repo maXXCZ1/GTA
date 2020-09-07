@@ -1,18 +1,22 @@
 package opkp.solutions.guesstheanimal
 
 
+
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+
+
 import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
-import opkp.solutions.guesstheanimal.dataclass.Animal
+
 
 /**
  * A simple [Fragment] subclass.
@@ -37,11 +41,12 @@ class StartupFragment : Fragment(){
             false
         )
 
-        var player = MediaPlayer.create(context, R.raw.dogbark)
+        val player = MediaPlayer.create(context, R.raw.dog)
         val anim = AnimationUtils.loadAnimation(context, R.anim.startup_anim)
         val logo = binding.animalsLogo
 
         if (shouldAnimate) {
+            binding.playButton.visibility = GONE
             player.start()
             logo.startAnimation(anim)
         }
@@ -59,7 +64,7 @@ class StartupFragment : Fragment(){
             }
         })
 
-        binding.animalsLogo.setOnClickListener{
+        binding.playButton.setOnClickListener{
             (findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment()))
         }
         return binding.root
