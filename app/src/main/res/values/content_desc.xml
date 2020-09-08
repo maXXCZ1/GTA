@@ -2,4 +2,7 @@
 <resources>
     <string name="logo_with_animals">Animal logo</string>
     <string name="play_button_contentdesc">Button to start game</string>
+    <string name="picture_1_contentdesc">Picture of first animal</string>
+    <string name="picture_2_contentdesc">Picture of second animal</string>
+    <string name="picture_3_contentdesc">Pircutre of thrird animal</string>
 </resources>
