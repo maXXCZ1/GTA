@@ -5,11 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import opkp.solutions.guesstheanimal.R
+import opkp.solutions.guesstheanimal.databinding.FragmentGameBinding
 import opkp.solutions.guesstheanimal.dataclass.Animal
 
-
-
 class GameViewModel : ViewModel() {
+
+    lateinit var binding:  FragmentGameBinding
+    val listSize = 0..3
+    val randomInt = listSize.random()
+    var animalSound = 0
+    lateinit var animalSelection: MutableList<Animal>
+    private var goodAnswer = 0
+    private var badAnswer = 0
 
     private val _picture1 = MutableLiveData<Int>()
     val picture1: LiveData<Int>
@@ -58,44 +65,48 @@ class GameViewModel : ViewModel() {
         Animal("wolf", R.drawable.ic_wolf, R.raw.wolf)
     )
 
-    private fun resetList() {
-        animalList.shuffle()
+    init {
+       initialize()
     }
 
-    init {
+    fun initialize (){
         _picture1.value = 0
         _picture1.value = 0
         _picture1.value = 0
         _picture1.value = 0
         _buttonSound.value = 0
-        
+
         resetList()
         pickAnimals()
+    }
+
+    private fun resetList() {
+        animalList.shuffle()
+        Log.d("GameViewModel", "Animal list size is ${animalList.size}")
     }
 
     private fun pickAnimals() {
 
         if (animalList.size >= 4) {
             _eventGameFinished.value = false
-            Log.d("GameViewModel", "Animal list size is ${animalList.size}")
+//            Log.d("GameViewModel", "Animal list size is ${animalList.size}")
             // pick 4 animals to list
             val anim1 = animalList.removeAt(0)
             val anim2 = animalList.removeAt(0)
             val anim3 = animalList.removeAt(0)
             val anim4 = animalList.removeAt(0)
 
-            Log.d("GameViewModel", "Animalselection list size is ${animalList.size}")
-            val animalSelection: MutableList<Animal> = mutableListOf(
+            Log.d("GameViewModel", "Animal list after selection is ${animalList.size}")
+            animalSelection  = mutableListOf(
                 anim1, anim2, anim3, anim4
             )
-            Log.d("GameViewModel", "Animal list size is ${animalSelection.size}")
+            Log.d("GameViewModel", "Animal selection list size is ${animalSelection.size}")
 
             // get random animal and assign it's sound to variable
-            val listSize = 0..3
-            val randomAnimal = listSize.random()
-            Log.d("GameViewModel", "Int is $randomAnimal")
-            val animalSound = animalSelection[randomAnimal].sound
-            Log.d("GameViewModel", "Button Int is ${animalSelection[randomAnimal].sound}")
+
+            Log.d("GameViewModel", "Int is $randomInt")
+            animalSound = animalSelection[randomInt].sound
+            Log.d("GameViewModel", "Button Int is ${animalSelection[randomInt].sound}")
 
             // assign values to observable variables
             _buttonSound.value = animalSound
@@ -108,6 +119,33 @@ class GameViewModel : ViewModel() {
         } else {
             _eventGameFinished.value = true
         }
+    }
+
+    fun onClickAnimal (position: Int) {
+        Log.d("GameViewModel", "onAnimalClick started: position is $position, randomInt is $randomInt")
+        if(position != randomInt) {
+            when (position) {
+                0 -> _picture1.value = R.drawable.ic_red_cross3
+                1 -> _picture2.value = R.drawable.ic_red_cross3
+                2 -> _picture3.value = R.drawable.ic_red_cross3
+                3 -> _picture4.value = R.drawable.ic_red_cross3
+           }
+            goodAnswer++
+        }else {
+            when(position) {
+                0 -> _picture1.value = R.drawable.ic_smiley
+                1 -> _picture2.value = R.drawable.ic_smiley
+                2 -> _picture3.value = R.drawable.ic_smiley
+                3 -> _picture4.value = R.drawable.ic_smiley
+            }
+            badAnswer++
+            next()
+        }
+    }
+
+    fun next() {
+        Log.d("GameViewModel", "Number of good answers: $goodAnswer" + " Number of bad answers: $badAnswer")
+        pickAnimals()
     }
 
     override fun onCleared() {

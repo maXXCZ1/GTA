@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import opkp.solutions.guesstheanimal.R
@@ -26,6 +25,7 @@ import opkp.solutions.guesstheanimal.databinding.FragmentGameBinding
  */
 class GameFragment : Fragment() {
 
+    private lateinit var binding: FragmentGameBinding
     private lateinit var viewModel: GameViewModel
     private lateinit var soundPlayer: MediaPlayer
     private var soundID: kotlin.Int = 0
@@ -45,7 +45,7 @@ class GameFragment : Fragment() {
 
 
 //        TODO maybe implament later
-        binding.gameviewModel = viewModel
+        binding.gameViewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
 
@@ -63,20 +63,35 @@ class GameFragment : Fragment() {
         viewModel.eventGameFinished.observe(viewLifecycleOwner,
             { hasFinished -> if (hasFinished) gameFinished() })
 
-        binding.soundButton.setOnClickListener { onClick()}
+        binding.soundButton.setOnClickListener { onClickSound() }
+
+        binding.picture1.setOnClickListener { onClickAnimal(0) }
+        binding.picture2.setOnClickListener { onClickAnimal(1) }
+        binding.picture3.setOnClickListener { onClickAnimal(2) }
+        binding.picture4.setOnClickListener { onClickAnimal(3) }
 
         return binding.root
     }
 
-    private fun onClick() {
+    private fun onClickSound() {
         soundPlayer = MediaPlayer.create(context, soundID)
         Log.d("GameFragment", "Value of sound: $soundID")
         soundPlayer.start()
     }
 
+    private fun onClickAnimal(position: Int) {
+        viewModel.onClickAnimal(position)
+    }
+
     private fun gameFinished() {
-        Toast.makeText(activity, "Game Finished", Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, "Game Finished", Toast.LENGTH_SHORT).show()
         findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameOverFragment())
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.initialize()
     }
 
     override fun onPause() {

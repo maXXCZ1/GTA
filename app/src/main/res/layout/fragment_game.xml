@@ -4,10 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="gameviewModel"
+            name="gameViewModel"
             type="opkp.solutions.guesstheanimal.game.GameViewModel" />
+        <variable
+            name="gameFragment"
+            type="opkp.solutions.guesstheanimal.game.GameFragment" />
     </data>
 
     <!-- TODO -> make proper databinding with viewmodel.picture 1-4 -->
