@@ -13,8 +13,6 @@ import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-
-
 import opkp.solutions.guesstheanimal.databinding.FragmentStartupBinding
 
 

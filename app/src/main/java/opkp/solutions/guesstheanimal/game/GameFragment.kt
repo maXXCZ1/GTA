@@ -1,11 +1,20 @@
 package opkp.solutions.guesstheanimal.game
 
+import android.media.MediaPlayer
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import opkp.solutions.guesstheanimal.R
+import opkp.solutions.guesstheanimal.databinding.FragmentGameBinding
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,34 +26,62 @@ import opkp.solutions.guesstheanimal.R
  */
 class GameFragment : Fragment() {
 
+    private lateinit var viewModel: GameViewModel
+    private lateinit var soundPlayer: MediaPlayer
+    private var soundID: kotlin.Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game, container, false)
+        val binding = DataBindingUtil.inflate<FragmentGameBinding>(
+            inflater,
+            R.layout.fragment_game,
+            container,
+            false
+        )
+        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
 
+//        TODO maybe implament later
+        binding.gameviewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
+
+
+        viewModel.picture1.observe(viewLifecycleOwner, binding.picture1::setImageResource)
+        viewModel.picture2.observe(viewLifecycleOwner, binding.picture2::setImageResource)
+        viewModel.picture3.observe(viewLifecycleOwner, binding.picture3::setImageResource)
+        viewModel.picture4.observe(viewLifecycleOwner, binding.picture4::setImageResource)
+
+        viewModel.buttonSound.observe(
+            viewLifecycleOwner,
+            { newSoundID -> soundID = newSoundID }
+        )
+
+        viewModel.eventGameFinished.observe(viewLifecycleOwner,
+            { hasFinished -> if (hasFinished) gameFinished() })
+
+        binding.soundButton.setOnClickListener { onClick()}
+
+        return binding.root
     }
 
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment Game.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            GameFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
+    private fun onClick() {
+        soundPlayer = MediaPlayer.create(context, soundID)
+        Log.d("GameFragment", "Value of sound: $soundID")
+        soundPlayer.start()
+    }
+
+    private fun gameFinished() {
+        Toast.makeText(activity, "Game Finished", Toast.LENGTH_LONG).show()
+        findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameOverFragment())
+    }
+
+    override fun onPause() {
+        Log.d("GameFragment", "onPause started")
+        super.onPause()
+        soundPlayer.stop()
+    }
 }
