@@ -9,12 +9,12 @@ import opkp.solutions.guesstheanimal.dataclass.Animal
 
 class GameViewModel : ViewModel() {
 
-    val listSize = 0..3
+    private val listSize = 0..3
     var randomInt = listSize.random()
     var animalSound = 0
+    var goodAnswer = 0
+    var badAnswer = 0
     lateinit var animalSelection: MutableList<Animal>
-    private var goodAnswer = 0
-    private var badAnswer = 0
     lateinit var animalList: MutableList<Animal>
 
     private val _picture1 = MutableLiveData<Int>()
@@ -44,6 +44,7 @@ class GameViewModel : ViewModel() {
 
     init {
         initialize()
+
     }
 
     fun initialize() {
@@ -92,6 +93,7 @@ class GameViewModel : ViewModel() {
             _eventGameFinished.value = false
 //            Log.d("GameViewModel", "Animal list size is ${animalList.size}")
             // pick 4 animals to list
+            randomInt = listSize.random()
             val anim1 = animalList.removeAt(0)
             val anim2 = animalList.removeAt(0)
             val anim3 = animalList.removeAt(0)
@@ -131,7 +133,7 @@ class GameViewModel : ViewModel() {
                 2 -> _picture3.value = R.drawable.ic_red_cross3
                 3 -> _picture4.value = R.drawable.ic_red_cross3
            }
-            badAnswer++
+           badAnswer++
         }else {
             when(position) {
                 0 -> _picture1.value = R.drawable.ic_smiley

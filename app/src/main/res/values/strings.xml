@@ -7,4 +7,8 @@
     <string name="sound_button">Play sound</string>
     <string name="load_button">Load next animals</string>
     <string name="text_congrats">Congratulations!\n Your score is:</string>
+    <string name="good_answers">Number of good answers:</string>
+    <string name="bad_answers">Number of bad answers:</string>
+    <string name="final_score_text">Your final score:</string>
+    <string name="play_again_button_text">Play again</string>
 </resources>

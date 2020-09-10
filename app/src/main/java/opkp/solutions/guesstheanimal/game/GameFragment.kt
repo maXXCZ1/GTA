@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import opkp.solutions.guesstheanimal.R
 import opkp.solutions.guesstheanimal.databinding.FragmentGameBinding
+import java.util.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -82,24 +83,29 @@ class GameFragment : Fragment() {
     }
 
 
-
     private fun onClickAnimal(position: Int) {
-        Log.d("GameFragment", "position is $position")
-        viewModel.onClickAnimal(position)
         if(position == viewModel.randomInt) {
+            Log.d("GameFragment", "Position = $position +  viewModel.randomInt = ${viewModel.randomInt}")
             soundPlayer.stop()
+        viewModel.onClickAnimal(position)
+        } else {
+            viewModel.onClickAnimal(position)
         }
     }
 
     private fun gameFinished() {
+        Log.d("GameFragment", "Number of goodAnswers is ${viewModel.goodAnswer} , number of bad answers passed is ${viewModel.badAnswer}")
+        val action = GameFragmentDirections.actionGameFragmentToGameOverFragment(viewModel.goodAnswer, viewModel.badAnswer)
         Toast.makeText(activity, "Game Finished", Toast.LENGTH_SHORT).show()
-        findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameOverFragment())
+        findNavController().navigate(action)
         viewModel.resetFinishValue()
     }
 
 
     override fun onResume() {
         super.onResume()
+        viewModel.goodAnswer = 0
+        viewModel.badAnswer = 0
         viewModel.initialize()
     }
 

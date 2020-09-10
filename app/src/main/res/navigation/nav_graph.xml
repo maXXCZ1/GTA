@@ -39,5 +39,14 @@
         android:id="@+id/gameOverFragment"
         android:name="opkp.solutions.guesstheanimal.game.GameOverFragment"
         android:label="fragment_game_over"
-        tools:layout="@layout/fragment_game_over" />
+        tools:layout="@layout/fragment_game_over" >
+        <argument
+            android:name="goodAnswer"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="badAnswer"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>
