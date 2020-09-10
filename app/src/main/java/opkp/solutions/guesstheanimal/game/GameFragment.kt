@@ -58,7 +58,7 @@ class GameFragment : Fragment() {
             viewLifecycleOwner,
             { newSoundID -> soundID = newSoundID }
         )
-        soundPlayer = MediaPlayer()
+//        soundPlayer = MediaPlayer()
         viewModel.eventGameFinished.observe(viewLifecycleOwner,
             { hasFinished -> if (hasFinished) gameFinished() })
 

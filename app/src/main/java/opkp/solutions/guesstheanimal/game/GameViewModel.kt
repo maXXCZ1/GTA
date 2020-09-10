@@ -10,7 +10,7 @@ import opkp.solutions.guesstheanimal.dataclass.Animal
 class GameViewModel : ViewModel() {
 
     val listSize = 0..3
-    var randomInt: Int = 0
+    var randomInt = listSize.random()
     var animalSound = 0
     lateinit var animalSelection: MutableList<Animal>
     private var goodAnswer = 0
@@ -102,7 +102,7 @@ class GameViewModel : ViewModel() {
                 anim1, anim2, anim3, anim4
             )
             Log.d("GameViewModel", "Animal selection list size is ${animalSelection.size}")
-            randomInt = listSize.random()
+
             // get random animal and assign it's sound to variable
 
             Log.d("GameViewModel", "RandomInt is $randomInt")
