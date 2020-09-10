@@ -29,6 +29,7 @@ class GameFragment : Fragment() {
     private lateinit var viewModel: GameViewModel
     private lateinit var soundPlayer: MediaPlayer
     private var soundID: kotlin.Int = 0
+    private var isSoundPlayerInitialized = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +49,6 @@ class GameFragment : Fragment() {
         binding.gameViewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-
-
         viewModel.picture1.observe(viewLifecycleOwner, binding.picture1::setImageResource)
         viewModel.picture2.observe(viewLifecycleOwner, binding.picture2::setImageResource)
         viewModel.picture3.observe(viewLifecycleOwner, binding.picture3::setImageResource)
@@ -59,11 +58,13 @@ class GameFragment : Fragment() {
             viewLifecycleOwner,
             { newSoundID -> soundID = newSoundID }
         )
-
+        soundPlayer = MediaPlayer()
         viewModel.eventGameFinished.observe(viewLifecycleOwner,
             { hasFinished -> if (hasFinished) gameFinished() })
 
         binding.soundButton.setOnClickListener { onClickSound() }
+
+        Log.d("GameFragment", "issoundplayerInitialized is $isSoundPlayerInitialized")
 
         binding.picture1.setOnClickListener { onClickAnimal(0) }
         binding.picture2.setOnClickListener { onClickAnimal(1) }
@@ -74,29 +75,40 @@ class GameFragment : Fragment() {
     }
 
     private fun onClickSound() {
-        soundPlayer = MediaPlayer.create(context, soundID)
         Log.d("GameFragment", "Value of sound: $soundID")
+        soundPlayer = MediaPlayer.create(context, soundID)
         soundPlayer.start()
+        isSoundPlayerInitialized = true
     }
 
+
+
     private fun onClickAnimal(position: Int) {
+        Log.d("GameFragment", "position is $position")
         viewModel.onClickAnimal(position)
+        if(position == viewModel.randomInt) {
+            soundPlayer.stop()
+        }
     }
 
     private fun gameFinished() {
         Toast.makeText(activity, "Game Finished", Toast.LENGTH_SHORT).show()
         findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameOverFragment())
-
+        viewModel.resetFinishValue()
     }
+
 
     override fun onResume() {
         super.onResume()
         viewModel.initialize()
     }
 
+
     override fun onPause() {
         Log.d("GameFragment", "onPause started")
         super.onPause()
-        soundPlayer.stop()
+        if(isSoundPlayerInitialized) {
+            soundPlayer.stop()
+        }
     }
 }

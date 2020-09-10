@@ -6,4 +6,5 @@
     <string name="picture_4_contentdesc">Picture of fourth animal</string>
     <string name="sound_button">Play sound</string>
     <string name="load_button">Load next animals</string>
+    <string name="text_congrats">Congratulations!\n Your score is:</string>
 </resources>
