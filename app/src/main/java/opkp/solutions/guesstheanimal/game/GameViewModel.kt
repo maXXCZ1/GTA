@@ -91,7 +91,7 @@ class GameViewModel : ViewModel() {
     private fun pickAnimals() {
         if (animalList.size >= 4) {
             _eventGameFinished.value = false
-//            Log.d("GameViewModel", "Animal list size is ${animalList.size}")
+
             // pick 4 animals to list
             randomInt = listSize.random()
             val anim1 = animalList.removeAt(0)
@@ -125,6 +125,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun onClickAnimal (position: Int) {
+        //assign wrong/right answer picture to clicked imageView
         Log.d("GameViewModel", "onAnimalClick started: position is $position, randomInt is $randomInt")
         if(position != randomInt) {
             when (position) {
@@ -142,20 +143,21 @@ class GameViewModel : ViewModel() {
                 3 -> _picture4.value = R.drawable.ic_smiley
             }
             goodAnswer++
-            next()
+            pickAnimals()
         }
     }
 
-    fun next() {
-        Log.d("GameViewModel", "Number of good answers: $goodAnswer" + " Number of bad answers: $badAnswer")
-        pickAnimals()
-    }
+    // load new list of animals and pick random sound to play
+//    fun next() {
+//        Log.d("GameViewModel", "Number of good answers: $goodAnswer" + " Number of bad answers: $badAnswer")
+//        pickAnimals()
+//    }
     fun resetFinishValue() {
         _eventGameFinished.value = false
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("GameViewModel", "onCleared called")
-    }
+//    override fun onCleared() {
+//        super.onCleared()
+//        Log.d("GameViewModel", "onCleared called")
+//    }
 }

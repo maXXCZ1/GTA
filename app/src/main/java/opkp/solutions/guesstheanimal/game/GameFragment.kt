@@ -3,6 +3,7 @@ package opkp.solutions.guesstheanimal.game
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import opkp.solutions.guesstheanimal.R
 import opkp.solutions.guesstheanimal.databinding.FragmentGameBinding
-import java.util.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,6 +31,7 @@ class GameFragment : Fragment() {
     private lateinit var soundPlayer: MediaPlayer
     private var soundID: kotlin.Int = 0
     private var isSoundPlayerInitialized = false
+    var soundPlaying: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,43 +60,76 @@ class GameFragment : Fragment() {
             viewLifecycleOwner,
             { newSoundID -> soundID = newSoundID }
         )
-//        soundPlayer = MediaPlayer()
+
         viewModel.eventGameFinished.observe(viewLifecycleOwner,
             { hasFinished -> if (hasFinished) gameFinished() })
 
         binding.soundButton.setOnClickListener { onClickSound() }
 
-        Log.d("GameFragment", "issoundplayerInitialized is $isSoundPlayerInitialized")
 
-        binding.picture1.setOnClickListener { onClickAnimal(0) }
-        binding.picture2.setOnClickListener { onClickAnimal(1) }
-        binding.picture3.setOnClickListener { onClickAnimal(2) }
-        binding.picture4.setOnClickListener { onClickAnimal(3) }
+            binding.picture1.setOnClickListener { onClickAnimal(0) }
+            binding.picture2.setOnClickListener { onClickAnimal(1) }
+            binding.picture3.setOnClickListener { onClickAnimal(2) }
+            binding.picture4.setOnClickListener { onClickAnimal(3) }
 
         return binding.root
     }
 
     private fun onClickSound() {
-        Log.d("GameFragment", "Value of sound: $soundID")
+        Log.d(
+            "GameFragment",
+            "Value of sound: $soundID, isSoundPlayerInitialized is $isSoundPlayerInitialized"
+        )
+        if(!isSoundPlayerInitialized){
+            initializeSoundPlayer()
+        }
+        playSound()
+        Log.d("GameFragment", "Value of isSoundPlayerInitialized: $isSoundPlayerInitialized")
+//        isSoundPlayerInitialized = false
+    }
+
+    private fun initializeSoundPlayer() {
+        Log.d(
+            "GameFragment",
+            "initializeSoundPlayer: started, isSoundPlayerInitialized is $isSoundPlayerInitialized"
+        )
         soundPlayer = MediaPlayer.create(context, soundID)
-        soundPlayer.start()
         isSoundPlayerInitialized = true
     }
 
+    private fun playSound() {
+        soundPlayer.start()
+    }
 
     private fun onClickAnimal(position: Int) {
+        if (!isSoundPlayerInitialized && position != viewModel.randomInt) {
+            val toast = Toast.makeText(activity, R.string.sound_button_toast, Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.BOTTOM,0,10)
+            toast.show()
+//            initializeSoundPlayer()
+        }
         if(position == viewModel.randomInt) {
-            Log.d("GameFragment", "Position = $position +  viewModel.randomInt = ${viewModel.randomInt}")
-            soundPlayer.stop()
-        viewModel.onClickAnimal(position)
+            viewModel.onClickAnimal(position)
+            if(isSoundPlayerInitialized) {
+                soundPlayer.stop()
+                soundPlayer.release()
+            }
+            isSoundPlayerInitialized = false
         } else {
             viewModel.onClickAnimal(position)
+//            isSoundPlayerInitialized = false
         }
     }
 
     private fun gameFinished() {
-        Log.d("GameFragment", "Number of goodAnswers is ${viewModel.goodAnswer} , number of bad answers passed is ${viewModel.badAnswer}")
-        val action = GameFragmentDirections.actionGameFragmentToGameOverFragment(viewModel.goodAnswer, viewModel.badAnswer)
+        Log.d(
+            "GameFragment",
+            "Number of goodAnswers is ${viewModel.goodAnswer} , number of bad answers passed is ${viewModel.badAnswer}"
+        )
+        val action = GameFragmentDirections.actionGameFragmentToGameOverFragment(
+            viewModel.goodAnswer,
+            viewModel.badAnswer
+        )
         Toast.makeText(activity, "Game Finished", Toast.LENGTH_SHORT).show()
         findNavController().navigate(action)
         viewModel.resetFinishValue()
@@ -115,6 +149,9 @@ class GameFragment : Fragment() {
         super.onPause()
         if(isSoundPlayerInitialized) {
             soundPlayer.stop()
+            Log.d("GameFragment", "soundPlayer.release() started")
+            soundPlayer.release()
+            Log.d("GameFragment", "soundPlayer.release() ended")
         }
     }
 }

@@ -48,19 +48,15 @@ class GameOverFragment : Fragment() {
 
         if(finalScore>0) {
             binding.finalscoreValue.setBackgroundColor(resources.getColor(R.color.goodScore_color))
-            if (finalScore == 0) {
-                binding.finalscoreValue.setBackgroundColor(resources.getColor(R.color.color_orange))
-            }
 
-        }
-        else{
+        }else if (finalScore == 0) {
+            binding.finalscoreValue.setBackgroundColor(resources.getColor(R.color.color_orange))
+        } else {
             binding.finalscoreValue.setBackgroundColor(resources.getColor(R.color.badScore_color))
         }
 
         binding.playAgainButton.setOnClickListener{
             findNavController().popBackStack()}
-            goodAnswer = 0
-            badAnswer = 0
 
         return binding.root
     }
@@ -68,7 +64,5 @@ class GameOverFragment : Fragment() {
     override fun onPause() {
         Log.d("GameOverFragment", "goodAnswer is $goodAnswer, badAnswer is $badAnswer")
         super.onPause()
-        goodAnswer = 0
-        badAnswer = 0
     }
 }

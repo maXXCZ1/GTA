@@ -11,4 +11,5 @@
     <string name="bad_answers">Number of bad answers:</string>
     <string name="final_score_text">Your final score:</string>
     <string name="play_again_button_text">Play again</string>
+    <string name="sound_button_toast">Play sound!</string>
 </resources>
