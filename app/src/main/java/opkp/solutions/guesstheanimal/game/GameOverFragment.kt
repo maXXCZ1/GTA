@@ -6,12 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import kotlinx.android.synthetic.main.fragment_game_over.*
 import opkp.solutions.guesstheanimal.R
+import opkp.solutions.guesstheanimal.StartupFragmentDirections
 import opkp.solutions.guesstheanimal.databinding.FragmentGameOverBinding
 
 
@@ -23,9 +23,10 @@ import opkp.solutions.guesstheanimal.databinding.FragmentGameOverBinding
  */
 class GameOverFragment : Fragment() {
 
-    val args: GameOverFragmentArgs by navArgs()
+    private val args: GameOverFragmentArgs by navArgs()
     private var goodAnswer: Int = 0
     private var badAnswer: Int = 0
+    private var backButtonPressed = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,11 +35,11 @@ class GameOverFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentGameOverBinding>(inflater, R.layout.fragment_game_over, container, false)
 
-        //TODO recieve arguments from bundle
-//        val goodAnswer = GameFragmentArgs.fromBundle(arguments).returnBack
+        Log.d("GameOverFragment", "GameOverFragment started, goodAnswer is $goodAnswer")
         goodAnswer = args.goodAnswer
         badAnswer = args.badAnswer
 
+        Log.d("GameOverFragment", "GameOverFragment continues, goodAnswer is $goodAnswer")
         val finalScore = goodAnswer+badAnswer*-1
 
         binding.goodscoreValue.text = goodAnswer.toString()
@@ -46,17 +47,24 @@ class GameOverFragment : Fragment() {
 
         binding.finalscoreValue.text = finalScore.toString()
 
-        if(finalScore>0) {
-            binding.finalscoreValue.setBackgroundColor(resources.getColor(R.color.goodScore_color))
+        if(finalScore>4) {
+            binding.finalscoreValue.setBackgroundColor(requireContext().getColor(R.color.goodScore_color))
 
-        }else if (finalScore == 0) {
-            binding.finalscoreValue.setBackgroundColor(resources.getColor(R.color.color_orange))
+        }else if (finalScore in 0..4) {
+            binding.finalscoreValue.setBackgroundColor(requireContext().getColor(R.color.color_orange))
         } else {
-            binding.finalscoreValue.setBackgroundColor(resources.getColor(R.color.badScore_color))
+            binding.finalscoreValue.setBackgroundColor(requireContext().getColor(R.color.badScore_color))
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            backButtonPressed = true
+            var action = GameOverFragmentDirections.actionGameOverFragmentToStartupFragment(backButtonPressed)
+            findNavController().navigate(action)
         }
 
         binding.playAgainButton.setOnClickListener{
-            findNavController().popBackStack()}
+            findNavController().popBackStack()
+        }
 
         return binding.root
     }
@@ -65,4 +73,6 @@ class GameOverFragment : Fragment() {
         Log.d("GameOverFragment", "goodAnswer is $goodAnswer, badAnswer is $badAnswer")
         super.onPause()
     }
+
+
 }

@@ -9,14 +9,18 @@
         android:id="@+id/startupFragment"
         android:name="opkp.solutions.guesstheanimal.StartupFragment"
         android:label="fragment_startup"
-        tools:layout="@layout/fragment_startup" >
+        tools:layout="@layout/fragment_startup">
         <action
             android:id="@+id/action_startupFragment_to_gameFragment"
             app:destination="@id/gameFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@anim/fragment_fade_enter"
             app:popExitAnim="@anim/fragment_fade_exit" />
+        <argument
+            android:name="backButtonPressed"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
@@ -24,7 +28,11 @@
         android:label="GameFragment" >
         <action
             android:id="@+id/action_gameFragment_to_startupFragment"
-            app:destination="@id/startupFragment" />
+            app:destination="@id/startupFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
         <argument
             android:name="returnBack"
             app:argType="boolean"
@@ -33,7 +41,9 @@
             android:id="@+id/action_gameFragment_to_gameOverFragment"
             app:destination="@id/gameOverFragment"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/gameOverFragment"
@@ -48,5 +58,12 @@
             android:name="badAnswer"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_gameOverFragment_to_startupFragment"
+            app:destination="@id/startupFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
 </navigation>

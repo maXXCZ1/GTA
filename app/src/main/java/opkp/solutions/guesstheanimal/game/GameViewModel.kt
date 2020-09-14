@@ -4,6 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import opkp.solutions.guesstheanimal.R
 import opkp.solutions.guesstheanimal.dataclass.Animal
 
@@ -41,47 +45,61 @@ class GameViewModel : ViewModel() {
     val eventGameFinished: LiveData<Boolean>
         get() = _eventGameFinished
 
+    private val _rightAnimalClicked = MutableLiveData<Boolean>()
+    val rightAnimalClicked: LiveData<Boolean>
+        get() = _rightAnimalClicked
 
     init {
         initialize()
-
     }
 
     fun initialize() {
          animalList =  mutableListOf(
+            Animal("alligator", R.drawable.ic_aligator, R.raw.aligator),
+            Animal("bear", R.drawable.ic_bear, R.raw.bear),
             Animal("buffalo", R.drawable.ic_buffalo, R.raw.buffalo),
             Animal("canarybird", R.drawable.ic_canary_bird, R.raw.canarybird),
+            Animal("camel", R.drawable.ic_camel, R.raw.camel),
             Animal("cat", R.drawable.ic_cat, R.raw.cat),
+            Animal("cougar", R.drawable.ic_cougar, R.raw.cougar),
             Animal("cows", R.drawable.ic_cow, R.raw.cows),
+            Animal("cricket", R.drawable.ic_cricket, R.raw.cricket),
             Animal("dog", R.drawable.ic_dog, R.raw.dog),
+            Animal("dolphin", R.drawable.ic_dolphin, R.raw.dolphin),
             Animal("donkey", R.drawable.ic_donkey, R.raw.donkey),
             Animal("duck", R.drawable.ic_duck, R.raw.duck),
             Animal("elephant", R.drawable.ic_elephant, R.raw.elephant),
+            Animal("frog", R.drawable.ic_frog, R.raw.frog),
             Animal("goat", R.drawable.ic_goat, R.raw.goat),
             Animal("goose", R.drawable.ic_goose, R.raw.goose),
             Animal("horse", R.drawable.ic_horse, R.raw.horse),
             Animal("owl", R.drawable.ic_owl, R.raw.owl),
             Animal("pig", R.drawable.ic_pig, R.raw.pig),
+            Animal("raccoon", R.drawable.ic_raccoon, R.raw.raccoon),
             Animal("rhinoceros", R.drawable.ic_rhinoceros, R.raw.rhinoceros),
             Animal("rooster", R.drawable.ic_rooster, R.raw.rooster),
             Animal("seagull", R.drawable.ic_seagull, R.raw.seagull),
+            Animal("sealion", R.drawable.ic_seal, R.raw.sealion),
             Animal("sheeps", R.drawable.ic_sheep, R.raw.sheeps),
+            Animal("squirrel", R.drawable.ic_squirrel, R.raw.squirrel),
             Animal("tiger", R.drawable.ic_tiger, R.raw.tiger),
             Animal("turkey", R.drawable.ic_turkey, R.raw.turkey),
-            Animal("wolf", R.drawable.ic_wolf, R.raw.wolf)
+            Animal("whale", R.drawable.ic_whale, R.raw.whale),
+            Animal("wolf", R.drawable.ic_wolf, R.raw.wolf),
+            Animal("zebra", R.drawable.ic_zebra, R.raw.zebra)
         )
         _picture1.value = 0
         _picture1.value = 0
         _picture1.value = 0
         _picture1.value = 0
         _buttonSound.value = 0
+        goodAnswer = 0
+        badAnswer = 0
+
 
         resetList()
         pickAnimals()
     }
-
-
-
 
     private fun resetList() {
         animalList.shuffle()
@@ -92,6 +110,7 @@ class GameViewModel : ViewModel() {
         if (animalList.size >= 4) {
             _eventGameFinished.value = false
 
+            Log.d("GameViewModel", "_eventGameFinished = ${_eventGameFinished.toString()} and _rightAnimalClicked = ${_rightAnimalClicked.toString()}")
             // pick 4 animals to list
             randomInt = listSize.random()
             val anim1 = animalList.removeAt(0)
@@ -118,7 +137,6 @@ class GameViewModel : ViewModel() {
             _picture3.value = animalSelection[2].image
             _picture4.value = animalSelection[3].image
 
-
         } else {
             _eventGameFinished.value = true
         }
@@ -143,21 +161,18 @@ class GameViewModel : ViewModel() {
                 3 -> _picture4.value = R.drawable.ic_smiley
             }
             goodAnswer++
-            pickAnimals()
+            Log.d("GameViewModel", "onAnimalClick ended: goodAnswer is $goodAnswer, badAnswer is $badAnswer")
+            _rightAnimalClicked.value = true
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(500)
+                _rightAnimalClicked.value = false
+                pickAnimals()
+            }
         }
     }
 
-    // load new list of animals and pick random sound to play
-//    fun next() {
-//        Log.d("GameViewModel", "Number of good answers: $goodAnswer" + " Number of bad answers: $badAnswer")
-//        pickAnimals()
-//    }
     fun resetFinishValue() {
         _eventGameFinished.value = false
     }
 
-//    override fun onCleared() {
-//        super.onCleared()
-//        Log.d("GameViewModel", "onCleared called")
-//    }
 }
