@@ -10,6 +10,7 @@ import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -29,6 +30,13 @@ class StartupFragment : Fragment() {
 
     var shouldAnimate = true
     var backButtonPressed = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            activity?.finish()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,6 +71,7 @@ class StartupFragment : Fragment() {
                 override fun onAnimationEnd(p0: Animation?) {
                     shouldAnimate = false
                     findNavController().navigate(StartupFragmentDirections.actionStartupFragmentToGameFragment())
+
                 }
 
                 override fun onAnimationRepeat(p0: Animation?) {
@@ -75,6 +84,7 @@ class StartupFragment : Fragment() {
         }
         return binding.root
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
